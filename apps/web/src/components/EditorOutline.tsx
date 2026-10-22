@@ -15,8 +15,6 @@ type EditorOutlineProps = {
   onCollapsedChange: (collapsed: boolean) => void;
 };
 
-const OUTLINE_INDENT = 12;
-
 const stripLeadingEmoji = (str: string): string => {
   const leadingEmojiRegex = /^(?:(?:[\u0030-\u0039#*]\uFE0F?\u20E3|\p{Extended_Pictographic}|[\u2460-\u24FF\u2600-\u27BF\u2B00-\u2BFF])[\uFE00-\uFE0F\u200D]*\s*)+/u;
   return str.replace(leadingEmojiRegex, "").trim() || str;
@@ -205,12 +203,16 @@ export const EditorOutline = ({ editor, scrollContainer, collapsed, shortcutLabe
           <li key={item.pos}>
             <div
               className={cn(
-                "relative group flex min-h-8 items-center rounded-[6px] pr-2 text-[12px] leading-5 transition-colors duration-150",
+                "group flex min-h-8 items-center rounded-[6px] pr-2 text-[12px] leading-5 transition-colors duration-150",
                 isActive
                   ? "bg-slate-100 text-slate-900"
                   : "text-slate-700 hover:bg-slate-50/70 hover:text-slate-900"
               )}
-              style={{ paddingLeft: depth * OUTLINE_INDENT }}
+              style={{
+                marginLeft: `${depth * -24}px`,
+                paddingLeft: `${depth * 24}px`,
+                width: `calc(100% + ${depth * 24}px)`,
+              }}
             >
               {hasChildren ? (
                 <Tooltip>
@@ -246,12 +248,7 @@ export const EditorOutline = ({ editor, scrollContainer, collapsed, shortcutLabe
             </div>
 
             {hasChildren && !itemCollapsed && (
-              <div className="relative">
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0 border-l border-slate-200/90"
-                  style={{ left: `calc(${depth * OUTLINE_INDENT}px + 0.75rem)` }}
-                />
+              <div className="ml-3 border-l border-slate-200/90 pl-3">
                 {renderItems(item.children, depth + 1)}
               </div>
             )}

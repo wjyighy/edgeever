@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Editor } from "@tiptap/react";
-import { docToMarkdown, markdownToDoc, type MemoDetail, type ResolvedNoteProse, type TiptapDoc } from "@edgeever/shared";
-import { useMermaidTheme } from "@/components/ThemeProvider";
+import { docToMarkdown, markdownToDoc, type MemoDetail, type TiptapDoc } from "@edgeever/shared";
 import type { MemoDocumentActionRequest } from "@/lib/app-helpers";
-import { notePrintAppearanceFromProse } from "@/lib/note-print-appearance";
 import { buildSingleNoteMarkdown, downloadMarkdownFile } from "@/lib/note-markdown-export";
 import { downloadNoteHtmlFile, getHtmlImageEmbedNoticeKind } from "@/lib/note-html-export";
 import { NOTE_HTML_FULL_STYLES } from "@/lib/note-html-export-assets";
@@ -27,7 +25,6 @@ export const useEditorDocumentActions = ({
   hydratedEditorMemoId,
   markdownSource,
   memo,
-  noteProse,
   notebookName,
   onDocumentActionConsumed,
   onSaveAsTemplate,
@@ -44,7 +41,6 @@ export const useEditorDocumentActions = ({
   hydratedEditorMemoId: string | null;
   markdownSource: string;
   memo: MemoDetail | null;
-  noteProse: ResolvedNoteProse;
   notebookName: string;
   onDocumentActionConsumed?: (requestId: number) => void;
   onSaveAsTemplate: (memo: MemoDetail, name: string) => Promise<void>;
@@ -54,7 +50,6 @@ export const useEditorDocumentActions = ({
   useMobilePlainTextEditor: boolean;
 }) => {
   const { t, i18n } = useTranslation();
-  const { mermaidTheme } = useMermaidTheme();
   const [shareOpen, setShareOpen] = useState(false);
   const [imageShareOpen, setImageShareOpen] = useState(false);
   const [imageShareSource, setImageShareSource] = useState<ShareNoteImageSource | null>(null);
@@ -124,7 +119,6 @@ export const useEditorDocumentActions = ({
         updatedAt: formatDateTime(memo.updatedAt),
         html: serializeNoteDocumentForPrint(editor, content.document),
         language: i18n.resolvedLanguage ?? i18n.language,
-        appearance: notePrintAppearanceFromProse(noteProse, mermaidTheme),
         labels: {
           close: t("editor.pdfExport.close"),
           error: t("editor.pdfExport.error"),
@@ -140,7 +134,7 @@ export const useEditorDocumentActions = ({
     if (!opened) {
       window.alert(t("editor.pdfExport.popupBlocked"));
     }
-  }, [editor, i18n.language, i18n.resolvedLanguage, memo, mermaidTheme, noteProse, notebookName, resolveExportContent, t, tagsText, title]);
+  }, [editor, i18n.language, i18n.resolvedLanguage, memo, notebookName, resolveExportContent, t, tagsText, title]);
 
   const handleExportMarkdown = useCallback(() => {
     const content = resolveExportContent();

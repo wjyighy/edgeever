@@ -3,7 +3,6 @@ import type { Editor } from "@tiptap/react";
 import type { TiptapDoc } from "@edgeever/shared";
 import { getAppPagePath, getMessageTargetOrigin } from "@/lib/app-page-path";
 import { createClientUuid } from "@/lib/client-id";
-import type { NotePrintAppearance } from "@/lib/note-print-appearance";
 
 export const NOTE_PRINT_MESSAGE = "edgeever:note-print";
 export const NOTE_PRINT_READY_MESSAGE = "edgeever:note-print-ready";
@@ -28,7 +27,6 @@ export type NotePrintPayload = {
   html: string;
   language: string;
   labels: NotePrintLabels;
-  appearance: NotePrintAppearance;
 };
 
 type NotePrintReadyMessage = {
